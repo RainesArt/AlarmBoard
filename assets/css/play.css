@@ -4,6 +4,7 @@
     border: 2px solid #cfcaca;
     position: relative;
     overflow: hidden;
+    display:flex;
 }
 .tile {
     width: 50px;
@@ -11,7 +12,6 @@
     border: 1px hidden #999;
     position: absolute;
     cursor: move;
-    display: flex;
     justify-content: center;
     align-items: center;
     font-size: 12px;
