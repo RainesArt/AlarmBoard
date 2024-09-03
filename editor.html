@@ -3,14 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tailwind Example</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>ChessBoard Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/editor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 <body>
-    <div class="navbar bg-blue-500 text-white p-6 
-        border-8 border-gray-0">
-        Hello, World!
-    </div>
+    <main class="page-container
+        bg-blue-950 text-white p-4
+        border-8 border-green-500
+        w-screen h-screen">
+        
+        <div class="tool-bar
+            w-[40%] h-[7%]
+            bg-green-200 text-blue-950
+            flex justify-around items-center
+            my-4 mx-auto">
+            
+            <i class="tool-bar-icon
+                fa-solid fa-hourglass-end">
+            </i>
+
+            <i class="tool-bar-icon
+                fa-solid fa-house">
+            </i>
+
+        </div>
+
+        <div class="chess-board
+            max-w-full aspect-square h-4/5 mx-auto
+            grid grid-cols-8 grid-rows-8">
+
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+            <div class="tileLight bg-yellow-600"></div>
+            <div class="tileDark bg-yellow-800"></div>
+        </div>
+
+        <div class="tool-bar
+            w-[80%] h-[7%]
+            bg-green-200 text-blue-950
+            my-4 mx-auto
+            flex justify-around items-center">
+
+            <i class="tool-bar-icon fa-solid fa-arrow-left"></i>
+            <i id="black-pawn-button" class="tool-bar-icon fa-solid fa-chess-pawn"></i>
+            <i id="white-pawn-button" class="tool-bar-icon fa-regular fa-chess-pawn"></i>
+            <i id="black-rook-button" class="tool-bar-icon fa-solid fa-chess-rook"></i>
+            <i id="white-rook-button" class="tool-bar-icon fa-regular fa-chess-rook"></i>
+            <i id="black-bishop-button" class="tool-bar-icon fa-solid fa-chess-bishop"></i>
+            <i id="white-bishop-button" class="tool-bar-icon fa-regular fa-chess-bishop"></i>
+            <i id="black-knight-button" class="tool-bar-icon fa-solid fa-chess-knight"></i>
+            <i id="white-knight-button" class="tool-bar-icon fa-regular fa-chess-knight"></i>
+            <i id="black-queen-button" class="tool-bar-icon fa-solid fa-chess-queen"></i>
+            <i id="white-queen-button" class="tool-bar-icon fa-regular fa-chess-queen"></i>
+            <i id="black-king-button" class="tool-bar-icon fa-solid fa-chess-king"></i>
+            <i id="white-king-button" class="tool-bar-icon fa-regular fa-chess-king"></i>
+            <i class="tool-bar-icon fa-solid fa-arrow-right"></i>
+        </div>
+
+    </main>
+
 </body>
 </html>
