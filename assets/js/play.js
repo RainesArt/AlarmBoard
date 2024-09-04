@@ -11,12 +11,14 @@ const tileCountDisplay = document.getElementById('tile-count');
 
 const whiteBoxDragger = document.getElementById('white-box-draggable');
 const blackBoxDragger = document.getElementById('black-box-draggable');
+const eraserDragger = document.getElementById('eraser-box-draggable');
 whiteBoxDragger.draggable = true;
 blackBoxDragger.draggable = true;
+eraserDragger.draggable = true;
 
 
 const TILE_SIZE = 50;
-const GRID_SIZE = 12;
+const GRID_SIZE = 13;
 const MAX_TILES = 170;
 let draggedTile = null;
 let tiles = [];
@@ -25,9 +27,10 @@ let highlightElement = null;
 function createTile(color, indexX, indexY) {
 
     // overwrites tiles with a new object
-    if(checkBoard(indexX,indexY,'tile')){
-        return null;
-    }
+    // if(checkBoard(indexX,indexY,'tile')){
+    //     return null;
+    // }
+    deleteBoardChild(indexX,indexY,'tile');
     const tile = document.createElement('div');
     tile.classList.add('tile', color);
     tile.draggable = true;
@@ -38,6 +41,14 @@ function createTile(color, indexX, indexY) {
         draggedTile = e.target;
         e.dataTransfer.setData('text/plain', '');
     });
+
+    // tile.addEventListener('dragend', (e) => {
+    //     e.dataTransfer.setData('text/plain', '');
+    //     this_x = e.target.
+    //     const indexPosition = pixelToIndex(e.clientX,e.clientY);
+    //     replace = checkBoard(indexPosition.x,indexPosition.y,'tile');
+    //     swap(e.target,replace);
+    // });
 
     placeTile(tile, indexX, indexY);
     return tile;
@@ -191,7 +202,7 @@ function checkBoard(indexX,indexY,className){
             let x = child.getAttribute('data-x');
             let y = child.getAttribute('data-y');
             if(x == indexX && y == indexY){
-                return true;
+                return child;
             }
         }
     }
@@ -237,6 +248,15 @@ blackBoxDragger.addEventListener('dragstart', (e) => {
 blackBoxDragger.addEventListener('dragend',(e) => {
     const indexPosition = pixelToIndex(e.clientX,e.clientY);
     const tile = createTile('black',indexPosition.x,indexPosition.y);
+});
+
+eraserDragger.addEventListener('dragstart', (e) => {
+    draggedTile = e.target;
+});
+
+eraserDragger.addEventListener('dragend', (e) => {
+    const indexPosition = pixelToIndex(e.clientX,e.clientY);
+    deleteBoardChild(indexPosition.x,indexPosition.y,'tile');
 });
 
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
@@ -285,3 +305,4 @@ autoFillBtn.addEventListener('click',() => {
 
 updateTileCount();
 updateControls();
+autoFillTiles();
