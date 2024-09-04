@@ -4,7 +4,7 @@ const boardArea = document.getElementById('board-area');
 const addWhiteBtn = document.getElementById('add-white');
 const addBlackBtn = document.getElementById('add-black');
 const clearBoardBtn = document.getElementById('clear-board');
-const checkBoardBtn = document.getElementById('check-board');
+const autoFillBtn = document.getElementById('autofill-board');
 const tileSlider = document.getElementById('tile-slider');
 const sliderValue = document.getElementById('slider-value');
 const tileCountDisplay = document.getElementById('tile-count');
@@ -16,7 +16,7 @@ blackBoxDragger.draggable = true;
 
 
 const TILE_SIZE = 50;
-const GRID_SIZE = 13;
+const GRID_SIZE = 12;
 const MAX_TILES = 170;
 let draggedTile = null;
 let tiles = [];
@@ -65,6 +65,31 @@ function addTiles(color, count) {
 
     updateTileCount();
     updateControls();
+}
+
+function autoFillTiles() {
+    clearBoard();
+    tile_color = 'white';
+
+    // create function to swap colors
+    const swap_color = function () {
+        if(tile_color == 'white'){
+            tile_color = 'black';
+        } else {
+            tile_color = 'white';
+        }
+    };
+
+    for(let col = 0; col < GRID_SIZE; col++){
+        for(let row = 0; row < GRID_SIZE; row++){
+            createTile(tile_color,col,row);
+            swap_color();
+        }
+
+        if(!(GRID_SIZE % 2)){
+            swap_color();
+        }
+    }
 }
 
 function updateTileCount() {
@@ -254,8 +279,8 @@ boardArea.addEventListener('dblclick', (e) => {
     }
 });
 
-checkBoardBtn.addEventListener('click',() => {
-    console.log(checkBoard(0,0,'tile'));
+autoFillBtn.addEventListener('click',() => {
+    autoFillTiles();
 });
 
 updateTileCount();
