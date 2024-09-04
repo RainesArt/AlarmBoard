@@ -20,18 +20,25 @@
         </div>
     </div>
     <div id="createarea" class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto">
+
+        <div id="tile-selector" class="min-w-10 mx-2 border-2 border-gray-800 flex flex-col justify-evenly">
+            <div id="white-box-draggable" class="w-full h-10 white duration-75"></div>
+            <div id="black-box-draggable" class="w-full h-10 black duration-75"></div>
         </div>
+
+        <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto"></div>
+        <div id="controls" class="mt-4 flex justify-center gap-4">
+        </div>
+
         <div id="tile-controls" class="mt-6 flex flex-wrap justify-center gap-4">
             <input type="range" id="tile-slider" min="1" max="10" value="1" class="w-48">
             <span id="slider-value" class="text-lg font-semibold">1</span>
+            <button id="autofill-board" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Auto Fill Tiles</button>
+            <button id="clear-board" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Clear Board</button>
             <button id="add-white" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add White Tiles</button>
             <button id="add-black" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded">Add Black Tiles</button>
+            <div id="tile-count" class="mt-4 text-center text-lg font-semibold">Total Tiles: 0 / 169</div>
         </div>
-        <div id="controls" class="mt-4 flex justify-center gap-4">
-            <button id="clear-board" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Clear Board</button>
-        </div>
-        <div id="tile-count" class="mt-4 text-center text-lg font-semibold">Total Tiles: 0 / 169</div>
     </div>
 
 </div>

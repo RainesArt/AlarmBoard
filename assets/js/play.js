@@ -4,9 +4,16 @@ const boardArea = document.getElementById('board-area');
 const addWhiteBtn = document.getElementById('add-white');
 const addBlackBtn = document.getElementById('add-black');
 const clearBoardBtn = document.getElementById('clear-board');
+const checkBoardBtn = document.getElementById('check-board');
 const tileSlider = document.getElementById('tile-slider');
 const sliderValue = document.getElementById('slider-value');
 const tileCountDisplay = document.getElementById('tile-count');
+
+const whiteBoxDragger = document.getElementById('white-box-draggable');
+const blackBoxDragger = document.getElementById('black-box-draggable');
+whiteBoxDragger.draggable = true;
+blackBoxDragger.draggable = true;
+
 
 const TILE_SIZE = 50;
 const GRID_SIZE = 13;
@@ -15,17 +22,24 @@ let draggedTile = null;
 let tiles = [];
 let highlightElement = null;
 
-function createTile(color, x, y) {
+function createTile(color, indexX, indexY) {
+
+    // overwrites tiles with a new object
+    if(checkBoard(indexX,indexY,'tile')){
+        return null;
+    }
     const tile = document.createElement('div');
     tile.classList.add('tile', color);
     tile.draggable = true;
+    tiles.push(tile);
+    boardArea.appendChild(tile);
 
     tile.addEventListener('dragstart', (e) => {
         draggedTile = e.target;
         e.dataTransfer.setData('text/plain', '');
     });
 
-    placeTile(tile, x, y);
+    placeTile(tile, indexX, indexY);
     return tile;
 }
 
@@ -37,9 +51,6 @@ function addTiles(color, count) {
         const position = findAvailablePosition();
         if (position) {
             const tile = createTile(color, position.x, position.y);
-            tiles.push(tile);
-            console.log(tile);
-            boardArea.appendChild(tile);
         } else {
             document.getElementById('reachedlimitmodel').classList.remove('hidden');
             document.getElementById('createarea').classList.add('hidden');
@@ -78,34 +89,50 @@ function findAvailablePosition() {
     return null;
 }
 
-function placeTile(tile, x, y) {
-    tile.style.left = x * TILE_SIZE + 'px';
-    tile.style.top = y * TILE_SIZE + 'px';
-    tile.dataset.x = x;
-    tile.dataset.y = y;
+function placeTile(tile, indexX, indexY) {
+    tile.style.left = indexX * TILE_SIZE + 'px';
+    tile.style.top = indexY * TILE_SIZE + 'px';
+    tile.dataset.x = indexX;
+    tile.dataset.y = indexY;
 }
 
-function snapToGrid(x, y) {
-    const snappedX = Math.round(x / TILE_SIZE);
-    const snappedY = Math.round(y / TILE_SIZE);
+function pixelToIndex(clientX, clientY) {
+    /* 
+    This function converts from pixel values on the screen to index values on 
+    the chess board.
+
+    inputs: event.clientX, and event.clientY
+    outputs: object cotaining an x value and y value
+
+    example usage: inputed (231.3,294.1), outputs (3,3)
+    Position (3,3) is the X on this  tile board:
+
+    0  0  0  0  0  0  0  0  
+    0  0  0  0  0  0  0  0  
+    0  0  0  0  0  0  0  0  
+    0  0  0  X  0  0  0  0  
+    0  0  0  0  0  0  0  0  
+    0  0  0  0  0  0  0  0  
+    0  0  0  0  0  0  0  0  
+    0  0  0  0  0  0  0  0  
+    */
+
+    bounds = boardArea.getBoundingClientRect();
+    const index_X = Math.round((clientX - bounds.left) / TILE_SIZE);
+    const index_Y = Math.round((clientY - bounds.top) / TILE_SIZE);
     return {
-        x: Math.max(0, Math.min(snappedX, GRID_SIZE - 1)),
-        y: Math.max(0, Math.min(snappedY, GRID_SIZE - 1))
+        x: Math.max(0, Math.min(index_X, GRID_SIZE - 1)),
+        y: Math.max(0, Math.min(index_Y, GRID_SIZE - 1))
     };
 }
 
-function createHighlight() {
-    const highlight = document.createElement('div');
-    highlight.classList.add('highlight');
-    boardArea.appendChild(highlight);
-    return highlight;
-}
-
-function updateHighlight(x, y) {
+function updateHighlight(clientX, clientY) {
     if (!highlightElement) {
-        highlightElement = createHighlight();
+        highlightElement = document.createElement('div');
+        highlightElement.classList.add('highlight');
+        boardArea.appendChild(highlightElement);
     }
-    const snappedPosition = snapToGrid(x, y);
+    const snappedPosition = pixelToIndex(clientX, clientY);
     highlightElement.style.left = snappedPosition.x * TILE_SIZE + 'px';
     highlightElement.style.top = snappedPosition.y * TILE_SIZE + 'px';
     highlightElement.style.display = 'block';
@@ -125,6 +152,68 @@ function clearBoard() {
     updateControls();
 }
 
+function checkBoard(indexX,indexY,className){
+    /* 
+    This function searches all children of the board for children with 
+    The specified className and index, return true if found or false if 
+    none are found
+    */
+    const children = boardArea.children;
+    for (var i = 0; i < children.length; i++){
+        let child = children[i];
+
+        if(child.classList.contains(className)){
+            let x = child.getAttribute('data-x');
+            let y = child.getAttribute('data-y');
+            if(x == indexX && y == indexY){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function deleteBoardChild(indexX,indexY,className){
+    /* 
+    This function searches all children of the board for objects with 
+    The specified className and index, and deltes them
+    */
+    const children = boardArea.children;
+    for (var i = 0; i < children.length; i++){
+        let child = children[i];
+
+        if(child.classList.contains(className)){
+            let x = child.getAttribute('data-x');
+            let y = child.getAttribute('data-y');
+            if(x == indexX && y == indexY){
+                child.remove();
+            }
+        }
+    }
+    return false;
+}
+
+whiteBoxDragger.addEventListener('dragstart', (e) => {
+    draggedTile = e.target;
+    // e.dataTransfer.setData('text/plain', '');
+});
+
+whiteBoxDragger.addEventListener('dragend', (e) => {
+    // e.dataTransfer.setData('text/plain', '');
+    const indexPosition = pixelToIndex(e.clientX,e.clientY);
+    const tile = createTile('white',indexPosition.x,indexPosition.y);
+});
+
+blackBoxDragger.addEventListener('dragstart', (e) => {
+    // e.dataTransfer.setData('text/plain', '');
+    draggedTile = e.target;
+});
+
+blackBoxDragger.addEventListener('dragend',(e) => {
+    const indexPosition = pixelToIndex(e.clientX,e.clientY);
+    const tile = createTile('black',indexPosition.x,indexPosition.y);
+});
+
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
 clearBoardBtn.addEventListener('click', clearBoard);
@@ -134,11 +223,10 @@ tileSlider.addEventListener('input', () => {
 });
 
 boardArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const rect = boardArea.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    updateHighlight(x, y);
+    if(draggedTile){
+        e.preventDefault();
+        updateHighlight(e.clientX,e.clientY);
+    }
 });
 
 boardArea.addEventListener('dragleave', () => {
@@ -149,11 +237,7 @@ boardArea.addEventListener('drop', (e) => {
     e.preventDefault();
     hideHighlight();
     if (draggedTile) {
-        const rect = boardArea.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const snappedPosition = snapToGrid(x, y);
+        const snappedPosition = pixelToIndex(e.clientX,e.clientY);
 
         if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
             placeTile(draggedTile, snappedPosition.x, snappedPosition.y);
@@ -168,6 +252,10 @@ boardArea.addEventListener('dblclick', (e) => {
         e.target.classList.toggle('white');
         e.target.classList.toggle('black');
     }
+});
+
+checkBoardBtn.addEventListener('click',() => {
+    console.log(checkBoard(0,0,'tile'));
 });
 
 updateTileCount();
