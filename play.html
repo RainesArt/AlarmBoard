@@ -3,37 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Board Play</title>
+    <title>Chess Board</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/play.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-
-<div class="container mx-auto px-4">
-    <div id="reachedlimitmodel" class="hidden fixed z-10 inset-0">
-        <div class="flex item-center justify-center min-h bg-gray-500 bg-opacity-0 transition-all">
-            <div class="flex flex-col items-center justify-between bg-white p-10 rounded w-2/3">
-                <h3 class="text-2x1 uppercase font-medium text-red-700 tracking-wider">Max Limit Reached</h3>
-                <p class="my-9">You've reached the maximum limit of allowed tiles. You can still move your tiles to create you board! If you're done, hit the save button to save your board.</p>
-                <button id="close-button" class="bg-red-500 text-white py-3 px-10 rounded">Close</button>
+<body class="bg-blue-950 font-mono">
+    <header class="flex justify-center">
+        <div id="timer" class="bg-white p-3 rounded-lg text-xl mt-7 -mb-14">
+           (4:30)
+        </div>
+    </header>
+<div class="flex items-center justify-center min-h-screen">
+    <div class="container mx-auto">
+        <div id="createarea" class="bg-gray-900 bg-opacity-50 max-w-3xl py-8 rounded-lg shadow-md">
+            <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto">
             </div>
         </div>
     </div>
-    <div id="createarea" class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
-        <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto">
-        </div>
-        <div id="tile-controls" class="mt-6 flex flex-wrap justify-center gap-4">
-            <input type="range" id="tile-slider" min="1" max="10" value="1" class="w-48">
-            <span id="slider-value" class="text-lg font-semibold">1</span>
-            <button id="add-white" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add White Tiles</button>
-            <button id="add-black" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded">Add Black Tiles</button>
-        </div>
-        <div id="controls" class="mt-4 flex justify-center gap-4">
-            <button id="clear-board" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Clear Board</button>
-        </div>
-        <div id="tile-count" class="mt-4 text-center text-lg font-semibold">Total Tiles: 0 / 169</div>
-    </div>
-
 </div>
 </body>
 <script src="assets/js/play.js"></script>
