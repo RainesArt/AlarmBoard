@@ -10,11 +10,16 @@ const sliderValue = document.getElementById('slider-value');
 const tileCountDisplay = document.getElementById('tile-count');
 
 const whiteBoxDragger = document.getElementById('white-box-draggable');
-const blackBoxDragger = document.getElementById('black-box-draggable');
-const eraserDragger = document.getElementById('eraser-box-draggable');
 whiteBoxDragger.draggable = true;
+
+const blackBoxDragger = document.getElementById('black-box-draggable');
 blackBoxDragger.draggable = true;
+
+const eraserDragger = document.getElementById('eraser-box-draggable');
 eraserDragger.draggable = true;
+
+const blackPawn = document.getElementById('black-pawn-button');
+blackPawn.draggable = true;
 
 
 const TILE_SIZE = 50;
@@ -22,6 +27,7 @@ const GRID_SIZE = 13;
 const MAX_TILES = 170;
 let draggedTile = null;
 let tiles = [];
+let pieces = [];
 let highlightElement = null;
 
 function createTile(color, indexX, indexY) {
@@ -52,6 +58,23 @@ function createTile(color, indexX, indexY) {
 
     placeTile(tile, indexX, indexY);
     return tile;
+}
+
+function createPiece(pieceName,indexX,indexY){
+    deleteBoardChild(indexX,indexY,'piece');
+    const piece = document.createElement('div');
+    piece.classList.add('piece', 'z-50','fa-regular','fa-chess-pawn');
+    piece.draggable = true;
+    pieces.push(piece);
+    boardArea.appendChild(piece);
+
+    piece.addEventListener('dragstart', (e) => {
+        draggedTile = e.target;
+        e.dataTransfer.setData('text/plain', '');
+    });
+
+    placePiece(piece, indexX, indexY);
+    return piece;
 }
 
 function addTiles(color, count) {
@@ -130,6 +153,13 @@ function placeTile(tile, indexX, indexY) {
     tile.style.top = indexY * TILE_SIZE + 'px';
     tile.dataset.x = indexX;
     tile.dataset.y = indexY;
+}
+
+function placePiece(piece, indexX, indexY){
+    piece.style.marginLeft = indexX * TILE_SIZE + 'px';
+    piece.style.marginTop = indexY * TILE_SIZE + 'px';
+    piece.dataset.x = indexX;
+    piece.dataset.y = indexY;
 }
 
 function pixelToIndex(clientX, clientY) {
@@ -282,15 +312,28 @@ boardArea.addEventListener('drop', (e) => {
     e.preventDefault();
     hideHighlight();
     if (draggedTile) {
-        const snappedPosition = pixelToIndex(e.clientX,e.clientY);
 
-        if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
-            placeTile(draggedTile, snappedPosition.x, snappedPosition.y);
+        if (draggedTile.classList.contains('tile')){
+            const snappedPosition = pixelToIndex(e.clientX,e.clientY);
+
+            if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
+                placeTile(draggedTile, snappedPosition.x, snappedPosition.y);
+            }
+    
+            draggedTile = null;
+
+        } else {
+            const snappedPosition = pixelToIndex(e.clientX,e.clientY);
+
+            if (!pieces.some(p => p !== draggedTile && p.dataset.x == snappedPosition.x && p.dataset.y == snappedPosition.y)) {
+                placePiece(draggedTile, snappedPosition.x, snappedPosition.y);
+            }
+    
+            draggedTile = null;
         }
-
-        draggedTile = null;
     }
 });
+
 
 boardArea.addEventListener('dblclick', (e) => {
     if (e.target.classList.contains('tile')) {
@@ -306,3 +349,5 @@ autoFillBtn.addEventListener('click',() => {
 updateTileCount();
 updateControls();
 autoFillTiles();
+
+createPiece('',1,1);
