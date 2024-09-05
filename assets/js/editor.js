@@ -21,6 +21,19 @@ eraserDragger.draggable = true;
 const blackPawn = document.getElementById('black-pawn-button');
 blackPawn.draggable = true;
 
+const whitePawn = document.getElementById('white-pawn-button');
+whitePawn.draggable = true;
+
+const blackRook = document.getElementById('black-rook-button');
+blackRook.draggable = true;
+
+const whiteBisop = document.getElementById('white-bishop-button');
+whiteBisop.draggable = true;
+
+const blackBishop = document.getElementById('black-bishop-button');
+blackBishop.draggable = true;
+
+
 
 const TILE_SIZE = 50;
 const GRID_SIZE = 13;
@@ -56,14 +69,15 @@ function createTile(color, indexX, indexY) {
     //     swap(e.target,replace);
     // });
 
-    placeTile(tile, indexX, indexY);
+    placeObject(tile, indexX, indexY);
     return tile;
 }
 
 function createPiece(pieceName,indexX,indexY){
     deleteBoardChild(indexX,indexY,'piece');
     const piece = document.createElement('div');
-    piece.classList.add('piece', 'z-50','fa-regular','fa-chess-pawn');
+    const piece_classes = pieceName.split(' ') ;
+    piece.classList.add('piece', 'z-50',piece_classes[0],piece_classes[1]);
     piece.draggable = true;
     pieces.push(piece);
     boardArea.appendChild(piece);
@@ -73,7 +87,7 @@ function createPiece(pieceName,indexX,indexY){
         e.dataTransfer.setData('text/plain', '');
     });
 
-    placePiece(piece, indexX, indexY);
+    placeObject(piece, indexX, indexY);
     return piece;
 }
 
@@ -148,18 +162,11 @@ function findAvailablePosition() {
     return null;
 }
 
-function placeTile(tile, indexX, indexY) {
-    tile.style.left = indexX * TILE_SIZE + 'px';
-    tile.style.top = indexY * TILE_SIZE + 'px';
-    tile.dataset.x = indexX;
-    tile.dataset.y = indexY;
-}
-
-function placePiece(piece, indexX, indexY){
-    piece.style.marginLeft = indexX * TILE_SIZE + 'px';
-    piece.style.marginTop = indexY * TILE_SIZE + 'px';
-    piece.dataset.x = indexX;
-    piece.dataset.y = indexY;
+function placeObject(object, indexX, indexY) {
+    object.style.left = indexX * TILE_SIZE + 'px';
+    object.style.top = indexY * TILE_SIZE + 'px';
+    object.dataset.x = indexX;
+    object.dataset.y = indexY;
 }
 
 function pixelToIndex(clientX, clientY) {
@@ -298,6 +305,15 @@ blackPawn.addEventListener('dragend', (e) => {
     const piece = createPiece('fa-solid fa-chess-pawn',position.x,position.y)
 });
 
+whitePawn.addEventListener('dragstart', (e) => {
+    draggedTile = e.target;
+});
+
+whitePawn.addEventListener('dragend', (e) => {
+    const position = pixelToIndex(e.clientX,e.clientY);
+    const piece = createPiece('fa-regular fa-chess-pawn',position.x,position.y)
+});
+
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
 clearBoardBtn.addEventListener('click', clearBoard);
@@ -323,12 +339,10 @@ boardArea.addEventListener('drop', (e) => {
     if (draggedTile) {
 
         if (draggedTile.classList.contains('piece')){
-            const snappedPosition = pixelToIndex(e.clientX,e.clientY);
-
-            if (!pieces.some(p => p !== draggedTile && p.dataset.x == snappedPosition.x && p.dataset.y == snappedPosition.y)) {
-                placePiece(draggedTile, snappedPosition.x, snappedPosition.y);
-            }
-    
+            const position = pixelToIndex(e.clientX,e.clientY);
+            deleteBoardChild('piece', position.x, position.y);
+            placeObject(draggedTile, position.x, position.y);
+            
             draggedTile = null;
 
         } else {
@@ -336,7 +350,7 @@ boardArea.addEventListener('drop', (e) => {
             const snappedPosition = pixelToIndex(e.clientX,e.clientY);
 
             if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
-                placeTile(draggedTile, snappedPosition.x, snappedPosition.y);
+                placeObject(draggedTile, snappedPosition.x, snappedPosition.y);
             }
     
             draggedTile = null;
@@ -358,5 +372,3 @@ autoFillBtn.addEventListener('click',() => {
 updateTileCount();
 updateControls();
 autoFillTiles();
-
-createPiece('',1,1);

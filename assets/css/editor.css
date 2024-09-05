@@ -63,6 +63,7 @@
 }
 
 .piece {
+    position: absolute;
     text-align: center;
     font-size: 45px;
     width: 50px;
