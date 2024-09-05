@@ -9,31 +9,15 @@ const tileSlider = document.getElementById('tile-slider');
 const sliderValue = document.getElementById('slider-value');
 const tileCountDisplay = document.getElementById('tile-count');
 
-const whiteBoxDragger = document.getElementById('white-box-draggable');
-whiteBoxDragger.draggable = true;
 
-const blackBoxDragger = document.getElementById('black-box-draggable');
-blackBoxDragger.draggable = true;
+let draggableElements = document.querySelectorAll('.draggable');
 
-const eraserDragger = document.getElementById('eraser-box-draggable');
-eraserDragger.draggable = true;
-
-const blackPawn = document.getElementById('black-pawn-button');
-blackPawn.draggable = true;
-
-const whitePawn = document.getElementById('white-pawn-button');
-whitePawn.draggable = true;
-
-const blackRook = document.getElementById('black-rook-button');
-blackRook.draggable = true;
-
-const whiteBisop = document.getElementById('white-bishop-button');
-whiteBisop.draggable = true;
-
-const blackBishop = document.getElementById('black-bishop-button');
-blackBishop.draggable = true;
-
-
+draggableElements.forEach((element) => {
+    element.draggable = true;
+    element.addEventListener('dragstart',(e) => {
+        draggedTile = e.target;
+    });
+});
 
 const TILE_SIZE = 50;
 const GRID_SIZE = 13;
@@ -45,10 +29,6 @@ let highlightElement = null;
 
 function createTile(color, indexX, indexY) {
 
-    // overwrites tiles with a new object
-    // if(checkBoard(indexX,indexY,'tile')){
-    //     return null;
-    // }
     deleteBoardChild(indexX,indexY,'tile');
     const tile = document.createElement('div');
     tile.classList.add('tile', color);
@@ -60,14 +40,6 @@ function createTile(color, indexX, indexY) {
         draggedTile = e.target;
         e.dataTransfer.setData('text/plain', '');
     });
-
-    // tile.addEventListener('dragend', (e) => {
-    //     e.dataTransfer.setData('text/plain', '');
-    //     this_x = e.target.
-    //     const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    //     replace = checkBoard(indexPosition.x,indexPosition.y,'tile');
-    //     swap(e.target,replace);
-    // });
 
     placeObject(tile, indexX, indexY);
     return tile;
@@ -266,54 +238,6 @@ function deleteBoardChild(indexX,indexY,className){
     return false;
 }
 
-whiteBoxDragger.addEventListener('dragstart', (e) => {
-    draggedTile = e.target;
-    // e.dataTransfer.setData('text/plain', '');
-});
-
-whiteBoxDragger.addEventListener('dragend', (e) => {
-    // e.dataTransfer.setData('text/plain', '');
-    const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    const tile = createTile('white',indexPosition.x,indexPosition.y);
-});
-
-blackBoxDragger.addEventListener('dragstart', (e) => {
-    // e.dataTransfer.setData('text/plain', '');
-    draggedTile = e.target;
-});
-
-blackBoxDragger.addEventListener('dragend',(e) => {
-    const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    const tile = createTile('black',indexPosition.x,indexPosition.y);
-});
-
-eraserDragger.addEventListener('dragstart', (e) => {
-    draggedTile = e.target;
-});
-
-eraserDragger.addEventListener('dragend', (e) => {
-    const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    deleteBoardChild(indexPosition.x,indexPosition.y,'tile');
-});
-
-blackPawn.addEventListener('dragstart', (e) => {
-    draggedTile = e.target;
-});
-
-blackPawn.addEventListener('dragend', (e) => {
-    const position = pixelToIndex(e.clientX,e.clientY);
-    const piece = createPiece('fa-solid fa-chess-pawn',position.x,position.y)
-});
-
-whitePawn.addEventListener('dragstart', (e) => {
-    draggedTile = e.target;
-});
-
-whitePawn.addEventListener('dragend', (e) => {
-    const position = pixelToIndex(e.clientX,e.clientY);
-    const piece = createPiece('fa-regular fa-chess-pawn',position.x,position.y)
-});
-
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
 clearBoardBtn.addEventListener('click', clearBoard);
@@ -337,15 +261,57 @@ boardArea.addEventListener('drop', (e) => {
     e.preventDefault();
     hideHighlight();
 
+    if(!draggedTile){return;}
+
     const position = pixelToIndex(e.clientX,e.clientY);
+    const classList = draggedTile.classList
 
-    if (draggedTile.classList.contains('piece') || draggedTile.classList.contains('tool-bar-icon') ){
-        deleteBoardChild(position.x, position.y,'piece');
+    if (classList.contains('piece')){
+
+        const destination = checkBoard(position.x,position.y,'piece');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'piece');
+        }
+
         placeObject(draggedTile, position.x, position.y);
 
-    } else if (draggedTile.classList.contains('tile') || draggedTile.classList.contains('draggable')) {
-        deleteBoardChild(position.x, position.y, 'tile');
+    } else if (classList.contains('tool-bar-icon')){
+        const destination = checkBoard(position.x,position.y,'piece');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'piece');
+        }
+
+        piece_classes = Array.from(classList).filter((className) => {
+            return className.startsWith('fa-');
+        });
+
+        console.log(piece_classes);
+
+        createPiece(`${piece_classes[0]} ${piece_classes[1]}`,position.x,position.y)
+    } else if (classList.contains('tile')) {
+        const destination = checkBoard(position.x,position.y,'tile');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'tile');
+        }
         placeObject(draggedTile, position.x, position.y);
+
+    } else if (classList.contains('draggable')) {
+        const destination = checkBoard(position.x,position.y,'tile');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'tile');
+        }
+
+        if(draggedTile.classList.contains('white')){
+            createTile('white',position.x,position.y);
+        }
+
+        else if(draggedTile.classList.contains('black')){
+            createTile('black',position.x,position.y);
+        }
     }
 
     draggedTile = null;
