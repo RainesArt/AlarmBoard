@@ -42,18 +42,20 @@
 #tile-slider {
     width: 200px;
 }
+
 #tile-count {
     margin-top: 10px;
     font-weight: bold;
 }
+
 #reachedlimitmodel{
     padding-top:200px;
     margin:auto;
-
 }
+
 #add-white{
-    background-color: #f0d9b5;
+    background-color: #F0D9B5;
 }
 #add-black{
-    background-color: #b58863;
+    background-color: #B58863;
 }
