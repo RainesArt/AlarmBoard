@@ -104,7 +104,7 @@ function autoFillTiles() {
 }
 
 function updateTileCount() {
-    tileCountDisplay.textContent = `Total Tiles: ${tiles.length} / 160`; // this calculation means will need to hardcode value to do later fix caluclation
+    tileCountDisplay.textContent = `Total Tiles: ${tiles.length} / 169`; // this calculation means will need to hardcode value to do later fix caluclation
 }
 
 function updateControls() {
