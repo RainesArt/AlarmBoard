@@ -336,26 +336,19 @@ boardArea.addEventListener('dragleave', () => {
 boardArea.addEventListener('drop', (e) => {
     e.preventDefault();
     hideHighlight();
-    if (draggedTile) {
 
-        if (draggedTile.classList.contains('piece')){
-            const position = pixelToIndex(e.clientX,e.clientY);
-            deleteBoardChild('piece', position.x, position.y);
-            placeObject(draggedTile, position.x, position.y);
-            
-            draggedTile = null;
+    const position = pixelToIndex(e.clientX,e.clientY);
 
-        } else {
+    if (draggedTile.classList.contains('piece') || draggedTile.classList.contains('tool-bar-icon') ){
+        deleteBoardChild(position.x, position.y,'piece');
+        placeObject(draggedTile, position.x, position.y);
 
-            const snappedPosition = pixelToIndex(e.clientX,e.clientY);
-
-            if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
-                placeObject(draggedTile, snappedPosition.x, snappedPosition.y);
-            }
-    
-            draggedTile = null;
-        }
+    } else if (draggedTile.classList.contains('tile') || draggedTile.classList.contains('draggable')) {
+        deleteBoardChild(position.x, position.y, 'tile');
+        placeObject(draggedTile, position.x, position.y);
     }
+
+    draggedTile = null;
 });
 
 boardArea.addEventListener('dblclick', (e) => {
@@ -372,3 +365,4 @@ autoFillBtn.addEventListener('click',() => {
 updateTileCount();
 updateControls();
 autoFillTiles();
+deleteBoardChild(0,0,'tile');
