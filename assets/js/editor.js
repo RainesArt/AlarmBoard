@@ -29,7 +29,7 @@ let highlightElement = null;
 
 function createTile(color, indexX, indexY) {
 
-    deleteBoardChild(indexX,indexY,'tile');
+    deleteBoardChild(indexX,indexY,'tile',tiles);
     const tile = document.createElement('div');
     tile.classList.add('tile', color);
     tile.draggable = true;
@@ -46,7 +46,7 @@ function createTile(color, indexX, indexY) {
 }
 
 function createPiece(pieceName,indexX,indexY){
-    deleteBoardChild(indexX,indexY,'piece');
+    deleteBoardChild(indexX,indexY,'piece',pieces);
     const piece = document.createElement('div');
     const piece_classes = pieceName.split(' ') ;
     piece.classList.add('piece', 'z-50',piece_classes[0],piece_classes[1]);
@@ -218,10 +218,10 @@ function checkBoard(indexX,indexY,className){
     return false;
 }
 
-function deleteBoardChild(indexX,indexY,className){
+function deleteBoardChild(indexX,indexY,className,trackingArray){
     /* 
     This function searches all children of the board for objects with 
-    The specified className and index, and deltes them
+    The specified className and index, and deletes them.
     */
     const children = boardArea.children;
     for (var i = 0; i < children.length; i++){
@@ -231,6 +231,13 @@ function deleteBoardChild(indexX,indexY,className){
             let x = child.getAttribute('data-x');
             let y = child.getAttribute('data-y');
             if(x == indexX && y == indexY){
+                deleteIndex = trackingArray.findIndex((element)=>{
+                    return element == child;
+                });
+
+                if(deleteIndex != -1){
+                    trackingArray = trackingArray.splice(deleteIndex,1);
+                }
                 child.remove();
             }
         }
@@ -271,7 +278,7 @@ boardArea.addEventListener('drop', (e) => {
         const destination = checkBoard(position.x,position.y,'piece');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'piece');
+            deleteBoardChild(position.x, position.y,'piece',pieces);
         }
 
         placeObject(draggedTile, position.x, position.y);
@@ -280,21 +287,19 @@ boardArea.addEventListener('drop', (e) => {
         const destination = checkBoard(position.x,position.y,'piece');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'piece');
+            deleteBoardChild(position.x, position.y,'piece',pieces);
         }
 
         piece_classes = Array.from(classList).filter((className) => {
             return className.startsWith('fa-');
         });
 
-        console.log(piece_classes);
-
         createPiece(`${piece_classes[0]} ${piece_classes[1]}`,position.x,position.y)
     } else if (classList.contains('tile')) {
         const destination = checkBoard(position.x,position.y,'tile');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'tile');
+            deleteBoardChild(position.x, position.y,'tile',tiles);
         }
         placeObject(draggedTile, position.x, position.y);
 
@@ -302,7 +307,7 @@ boardArea.addEventListener('drop', (e) => {
         const destination = checkBoard(position.x,position.y,'tile');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'tile');
+            deleteBoardChild(position.x, position.y,'tile',tiles);
         }
 
         if(draggedTile.classList.contains('white')){
@@ -331,4 +336,4 @@ autoFillBtn.addEventListener('click',() => {
 updateTileCount();
 updateControls();
 autoFillTiles();
-deleteBoardChild(0,0,'tile');
+deleteBoardChild(0,0,'tile',tiles);
