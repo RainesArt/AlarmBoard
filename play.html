@@ -6,22 +6,25 @@
     <title>Chess Board</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/play.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="bg-blue-950 font-mono">
+<body class="bg-blue-950 font-mono min-h-screen flex flex-col">
     <header class="flex justify-center">
-        <div id="timer" class="bg-white p-3 rounded-lg text-xl mt-7 -mb-14">
+        <div id="timer" class="bg-white p-3 rounded-lg text-xl mt-7 -mb-14 mr-5">
            (4:30)
         </div>
+        <div id="music" class="bg-white p-3 px-5 rounded-lg text-xl mt-7 -mb-14">
+            <i class="fa-solid fa-play"></i>
+        </div>
     </header>
-  
-<div class="flex items-center justify-center min-h-screen">
-    <div class="container mx-auto">
-        <div id="createarea" class="bg-gray-900 bg-opacity-50 max-w-3xl py-8 rounded-lg shadow-md">
-            <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto">
+
+    <main class="flex-grow flex items-center justify-center">
+        <div id="createarea" class="bg-gray-900 bg-opacity-50 max-w-3xl py-8 rounded-lg shadow-md px-8">
+            <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden">
             </div>
         </div>
-    </div>
-</div>
+    </main>
+
 </body>
 <script src="assets/js/play.js"></script>
 </html>
