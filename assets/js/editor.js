@@ -9,28 +9,27 @@ const tileSlider = document.getElementById('tile-slider');
 const sliderValue = document.getElementById('slider-value');
 const tileCountDisplay = document.getElementById('tile-count');
 
-const whiteBoxDragger = document.getElementById('white-box-draggable');
-const blackBoxDragger = document.getElementById('black-box-draggable');
-const eraserDragger = document.getElementById('eraser-box-draggable');
-whiteBoxDragger.draggable = true;
-blackBoxDragger.draggable = true;
-eraserDragger.draggable = true;
 
+let draggableElements = document.querySelectorAll('.draggable');
+
+draggableElements.forEach((element) => {
+    element.draggable = true;
+    element.addEventListener('dragstart',(e) => {
+        draggedTile = e.target;
+    });
+});
 
 const TILE_SIZE = 50;
 const GRID_SIZE = 13;
 const MAX_TILES = 170;
 let draggedTile = null;
 let tiles = [];
+let pieces = [];
 let highlightElement = null;
 
 function createTile(color, indexX, indexY) {
 
-    // overwrites tiles with a new object
-    // if(checkBoard(indexX,indexY,'tile')){
-    //     return null;
-    // }
-    deleteBoardChild(indexX,indexY,'tile');
+    deleteBoardChild(indexX,indexY,'tile',tiles);
     const tile = document.createElement('div');
     tile.classList.add('tile', color);
     tile.draggable = true;
@@ -42,16 +41,26 @@ function createTile(color, indexX, indexY) {
         e.dataTransfer.setData('text/plain', '');
     });
 
-    // tile.addEventListener('dragend', (e) => {
-    //     e.dataTransfer.setData('text/plain', '');
-    //     this_x = e.target.
-    //     const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    //     replace = checkBoard(indexPosition.x,indexPosition.y,'tile');
-    //     swap(e.target,replace);
-    // });
-
-    placeTile(tile, indexX, indexY);
+    placeObject(tile, indexX, indexY);
     return tile;
+}
+
+function createPiece(pieceName,indexX,indexY){
+    deleteBoardChild(indexX,indexY,'piece',pieces);
+    const piece = document.createElement('div');
+    const piece_classes = pieceName.split(' ') ;
+    piece.classList.add('piece', 'z-50',piece_classes[0],piece_classes[1]);
+    piece.draggable = true;
+    pieces.push(piece);
+    boardArea.appendChild(piece);
+
+    piece.addEventListener('dragstart', (e) => {
+        draggedTile = e.target;
+        e.dataTransfer.setData('text/plain', '');
+    });
+
+    placeObject(piece, indexX, indexY);
+    return piece;
 }
 
 function addTiles(color, count) {
@@ -125,11 +134,11 @@ function findAvailablePosition() {
     return null;
 }
 
-function placeTile(tile, indexX, indexY) {
-    tile.style.left = indexX * TILE_SIZE + 'px';
-    tile.style.top = indexY * TILE_SIZE + 'px';
-    tile.dataset.x = indexX;
-    tile.dataset.y = indexY;
+function placeObject(object, indexX, indexY) {
+    object.style.left = indexX * TILE_SIZE + 'px';
+    object.style.top = indexY * TILE_SIZE + 'px';
+    object.dataset.x = indexX;
+    object.dataset.y = indexY;
 }
 
 function pixelToIndex(clientX, clientY) {
@@ -209,10 +218,10 @@ function checkBoard(indexX,indexY,className){
     return false;
 }
 
-function deleteBoardChild(indexX,indexY,className){
+function deleteBoardChild(indexX,indexY,className,trackingArray){
     /* 
     This function searches all children of the board for objects with 
-    The specified className and index, and deltes them
+    The specified className and index, and deletes them.
     */
     const children = boardArea.children;
     for (var i = 0; i < children.length; i++){
@@ -222,42 +231,19 @@ function deleteBoardChild(indexX,indexY,className){
             let x = child.getAttribute('data-x');
             let y = child.getAttribute('data-y');
             if(x == indexX && y == indexY){
+                deleteIndex = trackingArray.findIndex((element)=>{
+                    return element == child;
+                });
+
+                if(deleteIndex != -1){
+                    trackingArray = trackingArray.splice(deleteIndex,1);
+                }
                 child.remove();
             }
         }
     }
     return false;
 }
-
-whiteBoxDragger.addEventListener('dragstart', (e) => {
-    draggedTile = e.target;
-    // e.dataTransfer.setData('text/plain', '');
-});
-
-whiteBoxDragger.addEventListener('dragend', (e) => {
-    // e.dataTransfer.setData('text/plain', '');
-    const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    const tile = createTile('white',indexPosition.x,indexPosition.y);
-});
-
-blackBoxDragger.addEventListener('dragstart', (e) => {
-    // e.dataTransfer.setData('text/plain', '');
-    draggedTile = e.target;
-});
-
-blackBoxDragger.addEventListener('dragend',(e) => {
-    const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    const tile = createTile('black',indexPosition.x,indexPosition.y);
-});
-
-eraserDragger.addEventListener('dragstart', (e) => {
-    draggedTile = e.target;
-});
-
-eraserDragger.addEventListener('dragend', (e) => {
-    const indexPosition = pixelToIndex(e.clientX,e.clientY);
-    deleteBoardChild(indexPosition.x,indexPosition.y,'tile');
-});
 
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
@@ -281,15 +267,59 @@ boardArea.addEventListener('dragleave', () => {
 boardArea.addEventListener('drop', (e) => {
     e.preventDefault();
     hideHighlight();
-    if (draggedTile) {
-        const snappedPosition = pixelToIndex(e.clientX,e.clientY);
 
-        if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
-            placeTile(draggedTile, snappedPosition.x, snappedPosition.y);
+    if(!draggedTile){return;}
+
+    const position = pixelToIndex(e.clientX,e.clientY);
+    const classList = draggedTile.classList
+
+    if (classList.contains('piece')){
+
+        const destination = checkBoard(position.x,position.y,'piece');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'piece',pieces);
         }
 
-        draggedTile = null;
+        placeObject(draggedTile, position.x, position.y);
+
+    } else if (classList.contains('tool-bar-icon')){
+        const destination = checkBoard(position.x,position.y,'piece');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'piece',pieces);
+        }
+
+        piece_classes = Array.from(classList).filter((className) => {
+            return className.startsWith('fa-');
+        });
+
+        createPiece(`${piece_classes[0]} ${piece_classes[1]}`,position.x,position.y)
+    } else if (classList.contains('tile')) {
+        const destination = checkBoard(position.x,position.y,'tile');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'tile',tiles);
+        }
+        placeObject(draggedTile, position.x, position.y);
+
+    } else if (classList.contains('draggable')) {
+        const destination = checkBoard(position.x,position.y,'tile');
+
+        if(destination != draggedTile){
+            deleteBoardChild(position.x, position.y,'tile',tiles);
+        }
+
+        if(draggedTile.classList.contains('white')){
+            createTile('white',position.x,position.y);
+        }
+
+        else if(draggedTile.classList.contains('black')){
+            createTile('black',position.x,position.y);
+        }
     }
+
+    draggedTile = null;
 });
 
 boardArea.addEventListener('dblclick', (e) => {
@@ -306,3 +336,4 @@ autoFillBtn.addEventListener('click',() => {
 updateTileCount();
 updateControls();
 autoFillTiles();
+deleteBoardChild(0,0,'tile',tiles);

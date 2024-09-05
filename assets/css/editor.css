@@ -27,6 +27,7 @@
 .white { background-color: #f0d9b5; }
 .black { background-color: #b58863; }
 .highlight {
+    z-index: 999;
     position: absolute;
     width: 50px;
     height: 50px;
@@ -56,6 +57,15 @@
 #add-white{
     background-color: #F0D9B5;
 }
+
 #add-black{
     background-color: #B58863;
+}
+
+.piece {
+    position: absolute;
+    text-align: center;
+    font-size: 45px;
+    width: 50px;
+    height: 50px;
 }

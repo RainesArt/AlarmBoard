@@ -23,9 +23,9 @@
     <div id="createarea" class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
 
         <div id="tile-selector" class="min-w-10 mx-2 border-2 border-gray-800 flex flex-col justify-evenly">
-            <div id="white-box-draggable" class="w-full h-10 white"></div>
-            <div id="black-box-draggable" class="w-full h-10 black"></div>
-            <div id="eraser-box-draggable" class="w-full h-10 text-4xl text-red-500 text-center bg-gray-700 fa-solid fa-eraser"></div>
+            <div id="white-box-draggable" class="draggable w-full h-10 white"></div>
+            <div id="black-box-draggable" class="draggable w-full h-10 black"></div>
+            <div id="eraser-box-draggable" class="draggable w-full h-10 text-4xl text-red-500 text-center bg-gray-700 fa-solid fa-eraser"></div>
         </div>
 
         <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto"></div>
@@ -40,6 +40,28 @@
             <button id="add-white" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add White Tiles</button>
             <button id="add-black" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded">Add Black Tiles</button>
             <div id="tile-count" class="mt-4 text-center text-lg font-semibold">Total Tiles: 0 / 169</div>
+            
+            <div class="tool-bar
+                w-[80%] h-[7%]
+                bg-green-200 text-blue-950
+                my-4 mx-auto
+                flex justify-around items-center">
+
+                <!-- <i class="tool-bar-icon fa-solid fa-arrow-left"></i> -->
+                <i id="black-pawn-button" class="draggable tool-bar-icon fa-solid fa-chess-pawn"></i>
+                <i id="white-pawn-button" class="draggable tool-bar-icon fa-regular fa-chess-pawn"></i>
+                <i id="black-rook-button" class="draggable tool-bar-icon fa-solid fa-chess-rook"></i>
+                <i id="white-rook-button" class="draggable tool-bar-icon fa-regular fa-chess-rook"></i>
+                <i id="black-bishop-button" class="draggable tool-bar-icon fa-solid fa-chess-bishop"></i>
+                <i id="white-bishop-button" class="draggable tool-bar-icon fa-regular fa-chess-bishop"></i>
+                <i id="black-knight-button" class="draggable tool-bar-icon fa-solid fa-chess-knight"></i>
+                <i id="white-knight-button" class="draggable tool-bar-icon fa-regular fa-chess-knight"></i>
+                <i id="black-queen-button" class="draggable tool-bar-icon fa-solid fa-chess-queen"></i>
+                <i id="white-queen-button" class="draggable tool-bar-icon fa-regular fa-chess-queen"></i>
+                <i id="black-king-button" class="draggable tool-bar-icon fa-solid fa-chess-king"></i>
+                <i id="white-king-button" class="draggable tool-bar-icon fa-regular fa-chess-king"></i>
+                <!-- <i class="tool-bar-icon fa-solid fa-arrow-right"></i> -->
+            </div>
         </div>
     </div>
 
