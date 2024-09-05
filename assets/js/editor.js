@@ -289,6 +289,15 @@ eraserDragger.addEventListener('dragend', (e) => {
     deleteBoardChild(indexPosition.x,indexPosition.y,'tile');
 });
 
+blackPawn.addEventListener('dragstart', (e) => {
+    draggedTile = e.target;
+});
+
+blackPawn.addEventListener('dragend', (e) => {
+    const position = pixelToIndex(e.clientX,e.clientY);
+    const piece = createPiece('fa-solid fa-chess-pawn',position.x,position.y)
+});
+
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
 clearBoardBtn.addEventListener('click', clearBoard);
@@ -313,16 +322,7 @@ boardArea.addEventListener('drop', (e) => {
     hideHighlight();
     if (draggedTile) {
 
-        if (draggedTile.classList.contains('tile')){
-            const snappedPosition = pixelToIndex(e.clientX,e.clientY);
-
-            if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
-                placeTile(draggedTile, snappedPosition.x, snappedPosition.y);
-            }
-    
-            draggedTile = null;
-
-        } else {
+        if (draggedTile.classList.contains('piece')){
             const snappedPosition = pixelToIndex(e.clientX,e.clientY);
 
             if (!pieces.some(p => p !== draggedTile && p.dataset.x == snappedPosition.x && p.dataset.y == snappedPosition.y)) {
@@ -330,10 +330,19 @@ boardArea.addEventListener('drop', (e) => {
             }
     
             draggedTile = null;
+
+        } else {
+
+            const snappedPosition = pixelToIndex(e.clientX,e.clientY);
+
+            if (!tiles.some(t => t !== draggedTile && t.dataset.x == snappedPosition.x && t.dataset.y == snappedPosition.y)) {
+                placeTile(draggedTile, snappedPosition.x, snappedPosition.y);
+            }
+    
+            draggedTile = null;
         }
     }
 });
-
 
 boardArea.addEventListener('dblclick', (e) => {
     if (e.target.classList.contains('tile')) {
