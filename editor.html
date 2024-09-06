@@ -20,30 +20,33 @@
             </div>
         </div>
     </div>
+
     <div id="createarea" class="max-w-3xl mx-auto bg-gray-900 bg-opacity-50 p-8 rounded-lg shadow-md">
 
+        <div></div>
+        <div class="top-bar mx-auto mb-10 w-full h-12 rounded bg-green-500 text-black-950 flex justify-around items-center">
+            <i id="home-button" class="tool-bar-icon fa-solid fa-house"></i>
+            <i id="download-button" class="tool-bar-icon fa-solid fa-download"></i>
+            <i id="upload-button" class="tool-bar-icon fa-solid fa-upload"></i>
+            <i id="play-button" class="tool-bar-icon fa-solid fa-play"></i>
+        </div>
+
         <div id="tile-selector" class="min-w-10 mx-2 border-2 flex flex-col justify-evenly">
-            <div id="white-box-draggable" class="draggable w-full h-10 white"></div>
-            <div id="black-box-draggable" class="draggable w-full h-10 black"></div>
-            <div id="eraser-box-draggable" class="draggable w-full h-10 text-4xl text-red-500 text-center bg-gray-700 fa-solid fa-eraser"></div>
+            <div id="white-box-maker" class="draggable w-full h-10 white"></div>
+            <div id="black-box-maker" class="draggable w-full h-10 black"></div>
+            <div id="tile-eraser-maker" class="draggable w-full h-10 text-4xl text-red-500 text-center bg-gray-700 fa-solid fa-eraser"></div>
+            <div id="piece-eraser-maker" class="draggable w-full h-10 text-4xl text-red-500 text-center bg-gray-700 fa-solid fa-puzzle-piece"></div>
         </div>
 
         <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto"></div>
         <div id="controls" class="mt-4 flex justify-center gap-4">
+            <div id="tile-count" class="mt-4 text-center text-white text-lg font-semibold">Total Tiles: 0/169</div>
         </div>
         
         <div id="tile-controls" class="mt-6 flex flex-wrap justify-center gap-4">
-            <input type="range" id="tile-slider" min="1" max="10" value="1" class="w-48">
-            <span id="slider-value" class="text-lg text-white font-semibold">1</span>
-            <button id="autofill-board" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Auto Fill Tiles</button>
-            <button id="clear-board" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Clear Board</button>
-            <button id="add-white" class="bg-blue-500 text-black font-bold py-2 px-4 rounded">Add White Tiles</button>
-            <button id="add-black" class="bg-gray-800 text-white font-bold py-2 px-4 rounded">Add Black Tiles</button>
-            <div id="tile-count" class="mt-4 text-center text-white text-lg font-semibold">Total Tiles: 0 / 169</div>
-            
             <div class="tool-bar
-                w-[80%] h-[7]
-                bg-green-200 text-black-950
+                w-full h-12 rounded
+                bg-green-500 text-black-950
                 flex justify-around items-center">
 
                 <!-- <i class="tool-bar-icon fa-solid fa-arrow-left"></i> -->
@@ -61,7 +64,19 @@
                 <i id="white-king-button" class="draggable tool-bar-icon fa-regular fa-chess-king"></i>
                 <!-- <i class="tool-bar-icon fa-solid fa-arrow-right"></i> -->
             </div>
+
+            <button id="clear-pieces" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Clear Pieces</button>
+            <button id="autofill-board" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Auto Fill Tiles</button>
+            <button id="clear-board" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Clear Tiles</button>
+            
+            <div>
+                <input type="range" id="tile-slider" min="1" max="10" value="1" class="w-48">
+                <span id="slider-value" class="text-lg text-white font-semibold">1</span>
+            </div>
+            <button id="add-white" class="bg-blue-500 text-black font-bold py-2 px-4 rounded">Add White Tiles</button>
+            <button id="add-black" class="bg-gray-800 text-white font-bold py-2 px-4 rounded">Add Black Tiles</button>
         </div>
+        
     </div>
 
 </div>
