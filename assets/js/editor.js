@@ -449,4 +449,9 @@ loadBtn.addEventListener('click', () => {
 
 updateTileCount();
 updateControls();
-autoFillTiles();
+const boardState = localStorage.getItem('boardData');
+if (boardState){
+    loadBoardState();
+} else {
+    autoFillTiles();
+}
