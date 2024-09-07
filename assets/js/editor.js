@@ -308,8 +308,13 @@ function saveBoardState(){
 };
 
 function loadBoardState(){
-    clearBoard();
     boardData = localStorage.getItem('boardData');
+    if(!boardData){
+        autoFillTiles();
+        return;
+    }
+
+    clearBoard();
     boardData = JSON.parse(boardData);
     console.log(boardData);
 
@@ -449,9 +454,4 @@ loadBtn.addEventListener('click', () => {
 
 updateTileCount();
 updateControls();
-const boardState = localStorage.getItem('boardData');
-if (boardState){
-    loadBoardState();
-} else {
-    autoFillTiles();
-}
+loadBoardState();
