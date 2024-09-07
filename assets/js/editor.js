@@ -42,6 +42,7 @@ function createTile(color, indexX, indexY) {
     });
 
     placeObject(tile, indexX, indexY);
+    updateTileCount();
     return tile;
 }
 
@@ -245,6 +246,48 @@ function deleteBoardChild(indexX,indexY,className,trackingArray){
     return false;
 }
 
+function saveBoardState(){
+    let boardData = [];
+
+    for (let i = 0; i < 13; i++) {
+        boardData[i] = [];
+        for (let j = 0; j < 13; j++) {
+            boardData[i][j] = {
+                tileColor: '',
+                pieceColor: '',
+                pieceType: ''
+            }; 
+        }
+    };
+
+    for (let i = 0; i < tiles.length; i++) { 
+        let tile = tiles[i];
+        let tileColor = tile.className;
+        let tileX = tile.getAttribute('data-x');
+        let tileY = tile.getAttribute('data-y');
+
+        console.log(`(${tileX},${tileY}) Color: ${tileColor}`);
+        boardData[tileX][tileY].tileColor = tileColor;
+    };
+
+    for (let i = 0; i < pieces.length; i++) { 
+        let piece = pieces[i];
+        let pieceColor = piece.className.split(' ')[2];
+        let pieceType = piece.className.split(' ')[3];
+        let pieceX = piece.getAttribute('data-x');
+        let pieceY = piece.getAttribute('data-y');
+        
+        console.log(`(${pieceX},${pieceY}) Color: ${pieceColor} Type: ${pieceType}`);
+        boardData[pieceX][pieceY].pieceColor = pieceColor;
+        boardData[pieceX][pieceY].pieceType = pieceType;
+    };
+    console.log(boardData);
+    const serializedBoard = JSON.stringify( );
+    
+    localStorage.setItem(key, serializedBoard);
+    console.log('Board saved successfully');
+};
+
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
 clearBoardBtn.addEventListener('click', clearBoard);
@@ -336,4 +379,4 @@ autoFillBtn.addEventListener('click',() => {
 updateTileCount();
 updateControls();
 autoFillTiles();
-deleteBoardChild(0,0,'tile',tiles);
+saveBoardState();
