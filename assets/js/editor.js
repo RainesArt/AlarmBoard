@@ -202,7 +202,11 @@ function clearBoard() {
 }
 
 function clearPieces() {
-    console.log('hello world');
+    for(let i = 0; i < pieces.length; i++){
+        piece = pieces[i]
+        piece.remove();
+    }
+    pieces = [];
 }
 
 function checkBoard(indexX,indexY,className){
