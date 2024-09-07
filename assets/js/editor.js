@@ -6,7 +6,7 @@ const addBlackBtn = document.getElementById('add-black');
 const clearBoardBtn = document.getElementById('clear-board');
 const homeBtn = document.getElementById('home-button');
 const playBtn = document.getElementById('play-button');
-// const  = document.getElementById('clear-board');
+const clearPiecesBtn = document.getElementById('clear-pieces');
 // const clearBoardBtn = document.getElementById('clear-board');
 const autoFillBtn = document.getElementById('autofill-board');
 const tileSlider = document.getElementById('tile-slider');
@@ -201,6 +201,10 @@ function clearBoard() {
     updateControls();
 }
 
+function clearPieces() {
+    console.log('hello world');
+}
+
 function checkBoard(indexX,indexY,className){
     /* 
     This function searches all children of the board for children with 
@@ -248,6 +252,48 @@ function deleteBoardChild(indexX,indexY,className,trackingArray){
     }
     return false;
 }
+
+function saveBoardState(){
+    let boardData = [];
+
+    for (let i = 0; i < 13; i++) {
+        boardData[i] = [];
+        for (let j = 0; j < 13; j++) {
+            boardData[i][j] = {
+                tileColor: '',
+                pieceColor: '',
+                pieceType: ''
+            }; 
+        }
+    };
+
+    for (let i = 0; i < tiles.length; i++) { 
+        let tile = tiles[i];
+        let tileColor = tile.className;
+        let tileX = tile.getAttribute('data-x');
+        let tileY = tile.getAttribute('data-y');
+
+        console.log(`(${tileX},${tileY}) Color: ${tileColor}`);
+        boardData[tileX][tileY].tileColor = tileColor;
+    };
+
+    for (let i = 0; i < pieces.length; i++) { 
+        let piece = pieces[i];
+        let pieceColor = piece.className.split(' ')[2];
+        let pieceType = piece.className.split(' ')[3];
+        let pieceX = piece.getAttribute('data-x');
+        let pieceY = piece.getAttribute('data-y');
+        
+        console.log(`(${pieceX},${pieceY}) Color: ${pieceColor} Type: ${pieceType}`);
+        boardData[pieceX][pieceY].pieceColor = pieceColor;
+        boardData[pieceX][pieceY].pieceType = pieceType;
+    };
+    console.log(boardData);
+    const serializedBoard = JSON.stringify( );
+    
+    localStorage.setItem(key, serializedBoard);
+    console.log('Board saved successfully');
+};
 
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
@@ -298,8 +344,10 @@ boardArea.addEventListener('drop', (e) => {
             return className.startsWith('fa-');
         });
 
-        createPiece(`${piece_classes[0]} ${piece_classes[1]}`,position.x,position.y)
+        createPiece(`${piece_classes[0]} ${piece_classes[1]}`,position.x,position.y);
+
     } else if (classList.contains('tile')) {
+
         const destination = checkBoard(position.x,position.y,'tile');
 
         if(destination != draggedTile){
@@ -321,6 +369,12 @@ boardArea.addEventListener('drop', (e) => {
         else if(draggedTile.classList.contains('black')){
             createTile('black',position.x,position.y);
         }
+    } else if(classList.contains('tile-eraser')){
+        deleteBoardChild(position.x,position.y,'piece',pieces);
+        deleteBoardChild(position.x,position.y,'tile',tiles);
+
+    } else if (classList.contains('piece-eraser')){
+        deleteBoardChild(position.x,position.y,'piece',pieces);
     }
 
     draggedTile = null;
@@ -343,6 +397,10 @@ homeBtn.addEventListener('click',()=>{
 
 playBtn.addEventListener('click',()=>{
     window.location.href = 'play.html';
+});
+
+clearPiecesBtn.addEventListener('click',()=>{
+    clearPieces();
 });
 
 
