@@ -4,6 +4,10 @@ const boardArea = document.getElementById('board-area');
 const addWhiteBtn = document.getElementById('add-white');
 const addBlackBtn = document.getElementById('add-black');
 const clearBoardBtn = document.getElementById('clear-board');
+const homeBtn = document.getElementById('home-button');
+const playBtn = document.getElementById('play-button');
+// const  = document.getElementById('clear-board');
+// const clearBoardBtn = document.getElementById('clear-board');
 const autoFillBtn = document.getElementById('autofill-board');
 const tileSlider = document.getElementById('tile-slider');
 const sliderValue = document.getElementById('slider-value');
@@ -283,7 +287,7 @@ boardArea.addEventListener('drop', (e) => {
 
         placeObject(draggedTile, position.x, position.y);
 
-    } else if (classList.contains('tool-bar-icon')){
+    } else if (classList.contains('piece-maker')){
         const destination = checkBoard(position.x,position.y,'piece');
 
         if(destination != draggedTile){
@@ -303,7 +307,7 @@ boardArea.addEventListener('drop', (e) => {
         }
         placeObject(draggedTile, position.x, position.y);
 
-    } else if (classList.contains('draggable')) {
+    } else if (classList.contains('tile-maker')) {
         const destination = checkBoard(position.x,position.y,'tile');
 
         if(destination != draggedTile){
@@ -333,7 +337,15 @@ autoFillBtn.addEventListener('click',() => {
     autoFillTiles();
 });
 
+homeBtn.addEventListener('click',()=>{
+    window.location.href = 'index.html';
+});
+
+playBtn.addEventListener('click',()=>{
+    window.location.href = 'play.html';
+});
+
+
 updateTileCount();
 updateControls();
 autoFillTiles();
-deleteBoardChild(0,0,'tile',tiles);

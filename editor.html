@@ -32,10 +32,10 @@
         </div>
 
         <div id="tile-selector" class="min-w-10 mx-2 border-2 flex flex-col justify-evenly">
-            <div id="white-box-maker" class="draggable w-full h-10 white"></div>
-            <div id="black-box-maker" class="draggable w-full h-10 black"></div>
-            <div id="tile-eraser-maker" class="draggable w-full h-10 text-4xl text-red-500 text-center bg-gray-700 fa-solid fa-eraser"></div>
-            <div id="piece-eraser-maker" class="draggable w-full h-10 text-4xl text-red-500 text-center bg-gray-700 fa-solid fa-puzzle-piece"></div>
+            <div id="white-box-maker" class="draggable tile-maker w-full h-10 white"></div>
+            <div id="black-box-maker" class="draggable tile-maker w-full h-10 black"></div>
+            <div id="tile-eraser-maker" class="draggable tile-eraser w-full h-10 text-4xl text-red-500 text-center fa-solid fa-eraser"></div>
+            <div id="piece-eraser-maker" class="draggable tile-maker w-full h-10 text-4xl text-red-500 text-center fa-solid fa-puzzle-piece"></div>
         </div>
 
         <div id="board-area" class="w-[400px] h-[400px] border-2 border-gray-800 relative overflow-hidden mx-auto"></div>
@@ -50,18 +50,18 @@
                 flex justify-around items-center">
 
                 <!-- <i class="tool-bar-icon fa-solid fa-arrow-left"></i> -->
-                <i id="black-pawn-button" class="draggable tool-bar-icon fa-solid fa-chess-pawn"></i>
-                <i id="white-pawn-button" class="draggable tool-bar-icon fa-regular fa-chess-pawn"></i>
-                <i id="black-rook-button" class="draggable tool-bar-icon fa-solid fa-chess-rook"></i>
-                <i id="white-rook-button" class="draggable tool-bar-icon fa-regular fa-chess-rook"></i>
-                <i id="black-bishop-button" class="draggable tool-bar-icon fa-solid fa-chess-bishop"></i>
-                <i id="white-bishop-button" class="draggable tool-bar-icon fa-regular fa-chess-bishop"></i>
-                <i id="black-knight-button" class="draggable tool-bar-icon fa-solid fa-chess-knight"></i>
-                <i id="white-knight-button" class="draggable tool-bar-icon fa-regular fa-chess-knight"></i>
-                <i id="black-queen-button" class="draggable tool-bar-icon fa-solid fa-chess-queen"></i>
-                <i id="white-queen-button" class="draggable tool-bar-icon fa-regular fa-chess-queen"></i>
-                <i id="black-king-button" class="draggable tool-bar-icon fa-solid fa-chess-king"></i>
-                <i id="white-king-button" class="draggable tool-bar-icon fa-regular fa-chess-king"></i>
+                <i id="black-pawn-button" class="draggable tool-bar-icon piece-maker fa-solid fa-chess-pawn"></i>
+                <i id="white-pawn-button" class="draggable tool-bar-icon piece-maker fa-regular fa-chess-pawn"></i>
+                <i id="black-rook-button" class="draggable tool-bar-icon piece-maker fa-solid fa-chess-rook"></i>
+                <i id="white-rook-button" class="draggable tool-bar-icon piece-maker fa-regular fa-chess-rook"></i>
+                <i id="black-bishop-button" class="draggable tool-bar-icon piece-maker fa-solid fa-chess-bishop"></i>
+                <i id="white-bishop-button" class="draggable tool-bar-icon piece-maker fa-regular fa-chess-bishop"></i>
+                <i id="black-knight-button" class="draggable tool-bar-icon piece-maker fa-solid fa-chess-knight"></i>
+                <i id="white-knight-button" class="draggable tool-bar-icon piece-maker fa-regular fa-chess-knight"></i>
+                <i id="black-queen-button" class="draggable tool-bar-icon piece-maker fa-solid fa-chess-queen"></i>
+                <i id="white-queen-button" class="draggable tool-bar-icon piece-maker fa-regular fa-chess-queen"></i>
+                <i id="black-king-button" class="draggable tool-bar-icon piece-maker fa-solid fa-chess-king"></i>
+                <i id="white-king-button" class="draggable tool-bar-icon piece-maker fa-regular fa-chess-king"></i>
                 <!-- <i class="tool-bar-icon fa-solid fa-arrow-right"></i> -->
             </div>
 
