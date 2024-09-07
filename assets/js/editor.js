@@ -4,6 +4,11 @@ const boardArea = document.getElementById('board-area');
 const addWhiteBtn = document.getElementById('add-white');
 const addBlackBtn = document.getElementById('add-black');
 const clearBoardBtn = document.getElementById('clear-board');
+const homeBtn = document.getElementById('home-button');
+const playBtn = document.getElementById('play-button');
+const clearPiecesBtn = document.getElementById('clear-pieces');
+const saveBtn = document.getElementById('save-button');
+const loadBtn = document.getElementById('upload-button');
 const autoFillBtn = document.getElementById('autofill-board');
 const tileSlider = document.getElementById('tile-slider');
 const sliderValue = document.getElementById('slider-value');
@@ -29,7 +34,7 @@ let highlightElement = null;
 
 function createTile(color, indexX, indexY) {
 
-    deleteBoardChild(indexX,indexY,'tile',tiles);
+    // deleteTile(indexX,indexY);
     const tile = document.createElement('div');
     tile.classList.add('tile', color);
     tile.draggable = true;
@@ -42,11 +47,12 @@ function createTile(color, indexX, indexY) {
     });
 
     placeObject(tile, indexX, indexY);
+    updateTileCount();
     return tile;
 }
 
 function createPiece(pieceName,indexX,indexY){
-    deleteBoardChild(indexX,indexY,'piece',pieces);
+    deletePiece(indexX,indexY);
     const piece = document.createElement('div');
     const piece_classes = pieceName.split(' ') ;
     piece.classList.add('piece', 'z-50',piece_classes[0],piece_classes[1]);
@@ -197,6 +203,14 @@ function clearBoard() {
     updateControls();
 }
 
+function clearPieces() {
+    for(let i = 0; i < pieces.length; i++){
+        piece = pieces[i]
+        piece.remove();
+    }
+    pieces = [];
+}
+
 function checkBoard(indexX,indexY,className){
     /* 
     This function searches all children of the board for children with 
@@ -218,32 +232,151 @@ function checkBoard(indexX,indexY,className){
     return false;
 }
 
-function deleteBoardChild(indexX,indexY,className,trackingArray){
-    /* 
-    This function searches all children of the board for objects with 
-    The specified className and index, and deletes them.
-    */
-    const children = boardArea.children;
-    for (var i = 0; i < children.length; i++){
-        let child = children[i];
+function deleteTile(indexX,indexY){
+    for (let i = 0; i < tiles.length; i++){
+        tile = tiles[i];
+        let x = tile.getAttribute('data-x');
+        let y = tile.getAttribute('data-y');
+        if(x == indexX && y == indexY){
+            deleteIndex = tiles.findIndex((object)=>{
+                return object == tile;
+            });
 
-        if(child.classList.contains(className)){
-            let x = child.getAttribute('data-x');
-            let y = child.getAttribute('data-y');
-            if(x == indexX && y == indexY){
-                deleteIndex = trackingArray.findIndex((element)=>{
-                    return element == child;
-                });
+            if(deleteIndex != -1){
+                tiles.splice(deleteIndex,1);
+            }
+            tile.remove();
+        }
+    }
+}
 
-                if(deleteIndex != -1){
-                    trackingArray = trackingArray.splice(deleteIndex,1);
-                }
-                child.remove();
+function deletePiece(indexX,indexY){
+    for (let i = 0; i < pieces.length; i++){
+        piece = pieces[i];
+        let x = piece.getAttribute('data-x');
+        let y = piece.getAttribute('data-y');
+        if(x == indexX && y == indexY){
+            deleteIndex = pieces.findIndex((object)=>{
+                return object == piece;
+            });
+
+            if(deleteIndex != -1){
+                pieces.splice(deleteIndex,1);
+            }
+            piece.remove();
+        }
+    }
+}
+
+function saveBoardState(){
+    let boardData = [];
+
+    for (let i = 0; i < 13; i++) {
+        boardData[i] = [];
+        for (let j = 0; j < 13; j++) {
+            boardData[i][j] = {
+                tileColor: '',
+                pieceColor: '',
+                pieceType: ''
+            }; 
+        }
+    };
+
+    for (let i = 0; i < tiles.length; i++) { 
+        let tile = tiles[i];
+        let tileColor = tile.className;
+        let tileX = tile.getAttribute('data-x');
+        let tileY = tile.getAttribute('data-y');
+
+        boardData[tileX][tileY].tileColor = tileColor;
+    };
+
+    for (let i = 0; i < pieces.length; i++) { 
+        let piece = pieces[i];
+        let pieceColor = piece.className.split(' ')[2];
+        let pieceType = piece.className.split(' ')[3];
+        let pieceX = piece.getAttribute('data-x');
+        let pieceY = piece.getAttribute('data-y');
+        
+        boardData[pieceX][pieceY].pieceColor = pieceColor;
+        boardData[pieceX][pieceY].pieceType = pieceType;
+    };
+
+    const serializedBoard = JSON.stringify(boardData);
+    
+    localStorage.setItem('boardData', serializedBoard);
+    console.log('Board saved successfully');
+};
+
+function loadBoardState(){
+    boardData = localStorage.getItem('boardData');
+    if(!boardData){
+        autoFillTiles();
+        return;
+    }
+
+    clearBoard();
+    boardData = JSON.parse(boardData);
+    console.log(boardData);
+
+    for(let i = 0; i < boardData.length; i++){
+        for(let j = 0; j < boardData.length; j++){
+            space = boardData[i][j];
+            if(space.tileColor == 'tile white'){
+                createTile('white',i,j);
+            } else if (space.tileColor == 'tile black'){
+                createTile('black',i,j);
+            } else {continue;}
+
+            if(space.pieceColor){
+                pieceName = space.pieceColor + ' ' + space.pieceType;
+                createPiece(pieceName,i,j);
             }
         }
     }
-    return false;
 }
+
+function saveBoardState(){
+    let boardData = [];
+
+    for (let i = 0; i < 13; i++) {
+        boardData[i] = [];
+        for (let j = 0; j < 13; j++) {
+            boardData[i][j] = {
+                tileColor: '',
+                pieceColor: '',
+                pieceType: ''
+            }; 
+        }
+    };
+
+    for (let i = 0; i < tiles.length; i++) { 
+        let tile = tiles[i];
+        let tileColor = tile.className;
+        let tileX = tile.getAttribute('data-x');
+        let tileY = tile.getAttribute('data-y');
+
+        console.log(`(${tileX},${tileY}) Color: ${tileColor}`);
+        boardData[tileX][tileY].tileColor = tileColor;
+    };
+
+    for (let i = 0; i < pieces.length; i++) { 
+        let piece = pieces[i];
+        let pieceColor = piece.className.split(' ')[2];
+        let pieceType = piece.className.split(' ')[3];
+        let pieceX = piece.getAttribute('data-x');
+        let pieceY = piece.getAttribute('data-y');
+        
+        console.log(`(${pieceX},${pieceY}) Color: ${pieceColor} Type: ${pieceType}`);
+        boardData[pieceX][pieceY].pieceColor = pieceColor;
+        boardData[pieceX][pieceY].pieceType = pieceType;
+    };
+    console.log(boardData);
+    const serializedBoard = JSON.stringify( );
+    
+    localStorage.setItem(key, serializedBoard);
+    console.log('Board saved successfully');
+};
 
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
@@ -278,36 +411,38 @@ boardArea.addEventListener('drop', (e) => {
         const destination = checkBoard(position.x,position.y,'piece');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'piece',pieces);
+            deletePiece(position.x, position.y);
         }
 
         placeObject(draggedTile, position.x, position.y);
 
-    } else if (classList.contains('tool-bar-icon')){
+    } else if (classList.contains('piece-maker')){
         const destination = checkBoard(position.x,position.y,'piece');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'piece',pieces);
+            deletePiece(position.x, position.y);
         }
 
         piece_classes = Array.from(classList).filter((className) => {
             return className.startsWith('fa-');
         });
 
-        createPiece(`${piece_classes[0]} ${piece_classes[1]}`,position.x,position.y)
+        createPiece(`${piece_classes[0]} ${piece_classes[1]}`,position.x,position.y);
+
     } else if (classList.contains('tile')) {
+
         const destination = checkBoard(position.x,position.y,'tile');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'tile',tiles);
+            deleteTile(position.x, position.y);
         }
         placeObject(draggedTile, position.x, position.y);
 
-    } else if (classList.contains('draggable')) {
+    } else if (classList.contains('tile-maker')) {
         const destination = checkBoard(position.x,position.y,'tile');
 
         if(destination != draggedTile){
-            deleteBoardChild(position.x, position.y,'tile',tiles);
+            deleteTile(position.x, position.y);
         }
 
         if(draggedTile.classList.contains('white')){
@@ -317,6 +452,12 @@ boardArea.addEventListener('drop', (e) => {
         else if(draggedTile.classList.contains('black')){
             createTile('black',position.x,position.y);
         }
+    } else if(classList.contains('tile-eraser')){
+        deletePiece(position.x,position.y);
+        deleteTile(position.x,position.y);
+
+    } else if (classList.contains('piece-eraser')){
+        deletePiece(position.x,position.y);
     }
 
     draggedTile = null;
@@ -333,7 +474,27 @@ autoFillBtn.addEventListener('click',() => {
     autoFillTiles();
 });
 
+homeBtn.addEventListener('click',()=>{
+    window.location.href = 'index.html';
+});
+
+playBtn.addEventListener('click',()=>{
+    window.location.href = 'play.html';
+});
+
+clearPiecesBtn.addEventListener('click',()=>{
+    clearPieces();
+});
+
+saveBtn.addEventListener('click',() => {
+    saveBoardState();
+});
+
+loadBtn.addEventListener('click', () => {
+    loadBoardState();
+});
+
+
 updateTileCount();
 updateControls();
-autoFillTiles();
-deleteBoardChild(0,0,'tile',tiles);
+loadBoardState();
