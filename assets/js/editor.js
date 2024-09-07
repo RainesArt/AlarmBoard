@@ -7,6 +7,7 @@ const clearBoardBtn = document.getElementById('clear-board');
 const homeBtn = document.getElementById('home-button');
 const playBtn = document.getElementById('play-button');
 const clearPiecesBtn = document.getElementById('clear-pieces');
+const saveBtn = document.getElementById('save-button');
 // const clearBoardBtn = document.getElementById('clear-board');
 const autoFillBtn = document.getElementById('autofill-board');
 const tileSlider = document.getElementById('tile-slider');
@@ -286,7 +287,6 @@ function saveBoardState(){
         let tileX = tile.getAttribute('data-x');
         let tileY = tile.getAttribute('data-y');
 
-        console.log(`(${tileX},${tileY}) Color: ${tileColor}`);
         boardData[tileX][tileY].tileColor = tileColor;
     };
 
@@ -297,14 +297,13 @@ function saveBoardState(){
         let pieceX = piece.getAttribute('data-x');
         let pieceY = piece.getAttribute('data-y');
         
-        console.log(`(${pieceX},${pieceY}) Color: ${pieceColor} Type: ${pieceType}`);
         boardData[pieceX][pieceY].pieceColor = pieceColor;
         boardData[pieceX][pieceY].pieceType = pieceType;
     };
-    console.log(boardData);
-    const serializedBoard = JSON.stringify( );
+
+    const serializedBoard = JSON.stringify(boardData);
     
-    localStorage.setItem(key, serializedBoard);
+    localStorage.setItem('boardData', serializedBoard);
     console.log('Board saved successfully');
 };
 
@@ -414,6 +413,10 @@ playBtn.addEventListener('click',()=>{
 
 clearPiecesBtn.addEventListener('click',()=>{
     clearPieces();
+});
+
+saveBtn.addEventListener('click',() => {
+    saveBoardState();
 });
 
 
