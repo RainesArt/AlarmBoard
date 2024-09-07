@@ -8,7 +8,7 @@ const homeBtn = document.getElementById('home-button');
 const playBtn = document.getElementById('play-button');
 const clearPiecesBtn = document.getElementById('clear-pieces');
 const saveBtn = document.getElementById('save-button');
-// const clearBoardBtn = document.getElementById('clear-board');
+const loadBtn = document.getElementById('upload-button');
 const autoFillBtn = document.getElementById('autofill-board');
 const tileSlider = document.getElementById('tile-slider');
 const sliderValue = document.getElementById('slider-value');
@@ -307,6 +307,29 @@ function saveBoardState(){
     console.log('Board saved successfully');
 };
 
+function loadBoardState(){
+    clearBoard();
+    boardData = localStorage.getItem('boardData');
+    boardData = JSON.parse(boardData);
+    console.log(boardData);
+
+    for(let i = 0; i < boardData.length; i++){
+        for(let j = 0; j < boardData.length; j++){
+            space = boardData[i][j];
+            if(space.tileColor == 'tile white'){
+                createTile('white',i,j);
+            } else if (space.tileColor == 'tile black'){
+                createTile('black',i,j);
+            } else {continue;}
+
+            if(space.pieceColor){
+                pieceName = space.pieceColor + ' ' + space.pieceType;
+                createPiece(pieceName,i,j);
+            }
+        }
+    }
+}
+
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
 clearBoardBtn.addEventListener('click', clearBoard);
@@ -417,6 +440,10 @@ clearPiecesBtn.addEventListener('click',()=>{
 
 saveBtn.addEventListener('click',() => {
     saveBoardState();
+});
+
+loadBtn.addEventListener('click', () => {
+    loadBoardState();
 });
 
 
