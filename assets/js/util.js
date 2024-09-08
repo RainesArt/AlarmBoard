@@ -153,7 +153,6 @@ function pixelToIndex(clientX, clientY) {
     };
 }
 
-
 function placeObject(object, indexX, indexY) {
     object.style.left = indexX * TILE_SIZE + 'px';
     object.style.top = indexY * TILE_SIZE + 'px';
@@ -176,7 +175,6 @@ function createTile(color, indexX, indexY) {
     });
 
     placeObject(tile, indexX, indexY);
-    updateTileCount();
     return tile;
 }
 
@@ -196,4 +194,10 @@ function createPiece(pieceName,indexX,indexY){
 
     placeObject(piece, indexX, indexY);
     return piece;
+}
+
+function clearBoard() {
+    boardArea.innerHTML = '';
+    tiles = [];
+    highlightElement = null;
 }

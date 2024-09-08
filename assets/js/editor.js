@@ -41,6 +41,7 @@ function addTiles(color, count) {
         const position = findAvailablePosition();
         if (position) {
             const tile = createTile(color, position.x, position.y);
+            updateTileCount();
         } else {
             document.getElementById('reachedlimitmodel').classList.remove('hidden');
             document.getElementById('createarea').classList.add('hidden');
@@ -59,6 +60,8 @@ function addTiles(color, count) {
 
 function autoFillTiles() {
     clearBoard();
+    updateTileCount();
+    updateControls();
     tile_color = 'white';
 
     // create function to swap colors
@@ -73,6 +76,7 @@ function autoFillTiles() {
     for(let col = 0; col < GRID_SIZE; col++){
         for(let row = 0; row < GRID_SIZE; row++){
             createTile(tile_color,col,row);
+            updateTileCount();
             swap_color();
         }
 
@@ -104,14 +108,6 @@ function findAvailablePosition() {
     return null;
 }
 
-function clearBoard() {
-    boardArea.innerHTML = '';
-    tiles = [];
-    highlightElement = null;
-    updateTileCount();
-    updateControls();
-}
-
 function clearPieces() {
     for(let i = 0; i < pieces.length; i++){
         piece = pieces[i]
@@ -141,7 +137,7 @@ function deleteTile(indexX,indexY){
 
 addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
 addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
-clearBoardBtn.addEventListener('click', clearBoard);
+clearBoardBtn.addEventListener('click', () => {clearBoard();updateTileCount();updateControls();});
 
 tileSlider.addEventListener('input', () => {
     sliderValue.textContent = tileSlider.value;
@@ -208,10 +204,12 @@ boardArea.addEventListener('drop', (e) => {
 
         if(draggedTile.classList.contains('white')){
             createTile('white',position.x,position.y);
+            updateTileCount();
         }
 
         else if(draggedTile.classList.contains('black')){
             createTile('black',position.x,position.y);
+            updateTileCount();
         }
     } else if(classList.contains('tile-eraser')){
         deletePiece(position.x,position.y);
