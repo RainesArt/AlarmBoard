@@ -106,21 +106,21 @@ function checkBoard(indexX,indexY,className){
 }
 
 function hideHighlight() {
-    if (highlightElement) {
-        highlightElement.style.display = 'none';
-    }
+    highlights.forEach((highlight) => {
+        highlight.remove();
+    })
 }
 
 function updateHighlight(clientX, clientY) {
-    if (!highlightElement) {
-        highlightElement = document.createElement('div');
-        highlightElement.classList.add('highlight');
-        boardArea.appendChild(highlightElement);
+    if (!target) {
+        target = document.createElement('div');
+        target.classList.add('highlight');
+        target.style.display = 'block';
+        boardArea.appendChild(target);
+        highlights.push(target);
     }
-    const snappedPosition = pixelToIndex(clientX, clientY);
-    highlightElement.style.left = snappedPosition.x * TILE_SIZE + 'px';
-    highlightElement.style.top = snappedPosition.y * TILE_SIZE + 'px';
-    highlightElement.style.display = 'block';
+    const position = pixelToIndex(clientX, clientY);
+    placeObject(target,position.x,position.y)
 }
 
 function pixelToIndex(clientX, clientY) {

@@ -25,7 +25,8 @@ const MAX_TILES = 170;
 let draggedTile = null;
 let tiles = [];
 let pieces = [];
-let highlightElement = null;
+let highlights = [];
+let target = null;
 
 
 function addTiles(color, count) {
