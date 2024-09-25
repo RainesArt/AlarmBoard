@@ -26,8 +26,7 @@ let draggedTile = null;
 let tiles = [];
 let pieces = [];
 let highlights = [];
-let target = createHighlight(0,0);
-target.style.display = 'none';
+// target.style.display = 'none';
 
 
 function addTiles(color, count) {
@@ -102,24 +101,6 @@ function clearPieces() {
     pieces = [];
 }
 
-function deleteTile(indexX,indexY){
-    for (let i = 0; i < tiles.length; i++){
-        tile = tiles[i];
-        let x = tile.getAttribute('data-x');
-        let y = tile.getAttribute('data-y');
-        if(x == indexX && y == indexY){
-            deleteIndex = tiles.findIndex((object)=>{
-                return object == tile;
-            });
-
-            if(deleteIndex != -1){
-                tiles.splice(deleteIndex,1);
-            }
-            tile.remove();
-        }
-    }
-}
-
 clearBoardBtn.addEventListener('click', () => {clearBoard();updateTileCount();updateControls();});
 
 boardArea.addEventListener('dragover', (e) => {
@@ -134,7 +115,7 @@ boardArea.addEventListener('dragover', (e) => {
 
 boardArea.addEventListener('drop', (e) => {
     e.preventDefault();
-    // hideHighlight();
+    hideHighlight();
 
     if(!draggedTile){return;}
 
@@ -233,3 +214,4 @@ loadBtn.addEventListener('click', () => {
 
 
 loadBoardState();
+let target = createHighlight(1,1,visible=false);

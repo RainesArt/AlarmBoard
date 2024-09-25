@@ -7,7 +7,6 @@ function loadBoardState(){
 
     clearBoard();
     boardData = JSON.parse(boardData);
-    console.log(boardData);
 
     for(let i = 0; i < boardData.length; i++){
         for(let j = 0; j < boardData.length; j++){
@@ -117,6 +116,24 @@ function hideHighlight() {
     });
 }
 
+function deleteTile(indexX,indexY){
+    for (let i = 0; i < tiles.length; i++){
+        tile = tiles[i];
+        let x = tile.getAttribute('data-x');
+        let y = tile.getAttribute('data-y');
+        if(x == indexX && y == indexY){
+            deleteIndex = tiles.findIndex((object)=>{
+                return object == tile;
+            });
+
+            if(deleteIndex != -1){
+                tiles.splice(deleteIndex,1);
+            }
+            tile.remove();
+        }
+    }
+}
+
 function updateHighlight(clientX, clientY) {
     if (!target) {
         target = document.createElement('div');
@@ -185,7 +202,7 @@ function createTile(color, indexX, indexY) {
 }
 
 function createPiece(pieceName,indexX,indexY){
-    deletePiece(indexX,indexY);
+    // deletePiece(indexX,indexY);
     const piece = document.createElement('div');
     const piece_classes = pieceName.split(' ') ;
     piece.classList.add('piece', 'z-50',piece_classes[0],piece_classes[1]);
@@ -202,14 +219,18 @@ function createPiece(pieceName,indexX,indexY){
     return piece;
 }
 
-function createHighlight(indexX,indexY){
-    deleteHighlight(indexX,indexY);
+function createHighlight(indexX,indexY,visible=true){
+    // deleteHighlight(indexX,indexY);
     const highlight = document.createElement('div');
     highlight.classList.add('highlight');
-    highlight.style.display = 'block';
     highlights.push(highlight);
     boardArea.appendChild(highlight);
     placeObject(highlight,indexX,indexY);
+    if(visible){
+        highlight.style.display = 'block';
+    } else {
+        highlight.style.display = 'none';
+    }
     return highlight;
 }
 
