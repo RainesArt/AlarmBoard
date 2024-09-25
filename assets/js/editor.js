@@ -1,8 +1,6 @@
 // TODO: Create save button which saves the current board to local storage
 
 const boardArea = document.getElementById('board-area');
-const addWhiteBtn = document.getElementById('add-white');
-const addBlackBtn = document.getElementById('add-black');
 const clearBoardBtn = document.getElementById('clear-board');
 const homeBtn = document.getElementById('home-button');
 const playBtn = document.getElementById('play-button');
@@ -10,9 +8,6 @@ const clearPiecesBtn = document.getElementById('clear-pieces');
 const saveBtn = document.getElementById('save-button');
 const loadBtn = document.getElementById('upload-button');
 const autoFillBtn = document.getElementById('autofill-board');
-const tileSlider = document.getElementById('tile-slider');
-const sliderValue = document.getElementById('slider-value');
-const tileCountDisplay = document.getElementById('tile-count');
 
 
 let draggableElements = document.querySelectorAll('.draggable');
@@ -86,17 +81,6 @@ function autoFillTiles() {
     }
 }
 
-function updateTileCount() {
-    tileCountDisplay.textContent = `Total Tiles: ${tiles.length} / 169`; // this calculation means will need to hardcode value to do later fix caluclation
-}
-
-function updateControls() {
-    const isFull = tiles.length >= MAX_TILES;
-    addWhiteBtn.disabled = isFull;
-    addBlackBtn.disabled = isFull;
-    tileSlider.disabled = isFull;
-}
-
 function findAvailablePosition() {
     for (let y = 0; y < GRID_SIZE; y++) {
         for (let x = 0; x < GRID_SIZE; x++) {
@@ -134,14 +118,7 @@ function deleteTile(indexX,indexY){
     }
 }
 
-
-addWhiteBtn.addEventListener('click', () => addTiles('white', parseInt(tileSlider.value)));
-addBlackBtn.addEventListener('click', () => addTiles('black', parseInt(tileSlider.value)));
 clearBoardBtn.addEventListener('click', () => {clearBoard();updateTileCount();updateControls();});
-
-tileSlider.addEventListener('input', () => {
-    sliderValue.textContent = tileSlider.value;
-});
 
 boardArea.addEventListener('dragover', (e) => {
     if(draggedTile){
@@ -254,6 +231,4 @@ loadBtn.addEventListener('click', () => {
 });
 
 
-updateTileCount();
-updateControls();
 loadBoardState();
