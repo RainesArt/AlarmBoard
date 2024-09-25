@@ -26,6 +26,7 @@ let draggedTile = null;
 let tiles = [];
 let pieces = [];
 let highlights = [];
+let target = null;
 // target.style.display = 'none';
 
 
@@ -214,4 +215,4 @@ loadBtn.addEventListener('click', () => {
 
 
 loadBoardState();
-let target = createHighlight(1,1,visible=false);
+target = createHighlight(1,1,visible=false);

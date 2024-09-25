@@ -65,30 +65,6 @@ function saveBoardState(){
     console.log('Board saved successfully');
 };
 
-function deletePiece(indexX,indexY){
-    for (let i = 0; i < pieces.length; i++){
-        piece = pieces[i];
-        let x = piece.getAttribute('data-x');
-        let y = piece.getAttribute('data-y');
-        if(x == indexX && y == indexY){    
-            pieces.splice(i,1);
-            piece.remove();
-        }
-    }
-}
-
-function deleteHighlight(indexX,indexY){
-    for(let i = 0; i< highlights.length; i++){
-        highlight = highlights[i];
-        let x = highlight.getAttribute('data-x');
-        let y = highlight.getAttribute('data-y');
-        if(x == indexX && y == indexY){    
-            highlights.splice(i,1);
-            highlight.remove();
-        }
-    }
-}
-
 function checkBoard(indexX,indexY,className){
     /* 
     This function searches all children of the board for children with 
@@ -116,35 +92,11 @@ function hideHighlight() {
     });
 }
 
-function deleteTile(indexX,indexY){
-    for (let i = 0; i < tiles.length; i++){
-        tile = tiles[i];
-        let x = tile.getAttribute('data-x');
-        let y = tile.getAttribute('data-y');
-        if(x == indexX && y == indexY){
-            deleteIndex = tiles.findIndex((object)=>{
-                return object == tile;
-            });
-
-            if(deleteIndex != -1){
-                tiles.splice(deleteIndex,1);
-            }
-            tile.remove();
-        }
-    }
-}
-
-function updateHighlight(clientX, clientY) {
-    if (!target) {
-        target = document.createElement('div');
-        target.classList.add('highlight');
-        target.style.display = 'block';
-        boardArea.appendChild(target);
-        highlights.push(target);
-    }
-    const position = pixelToIndex(clientX, clientY);
-    placeObject(target,position.x,position.y);
-    highlightElement.style.display = 'block';
+function clearHighlights(){
+    highlights.forEach((highlight) => {
+        highlight.remove();
+    });
+    highlights = [];
 }
 
 function pixelToIndex(clientX, clientY) {
@@ -232,6 +184,48 @@ function createHighlight(indexX,indexY,visible=true){
         highlight.style.display = 'none';
     }
     return highlight;
+}
+
+function deletePiece(indexX,indexY){
+    for (let i = 0; i < pieces.length; i++){
+        piece = pieces[i];
+        let x = piece.getAttribute('data-x');
+        let y = piece.getAttribute('data-y');
+        if(x == indexX && y == indexY){    
+            pieces.splice(i,1);
+            piece.remove();
+        }
+    }
+}
+
+function deleteTile(indexX,indexY){
+    for (let i = 0; i < tiles.length; i++){
+        tile = tiles[i];
+        let x = tile.getAttribute('data-x');
+        let y = tile.getAttribute('data-y');
+        if(x == indexX && y == indexY){
+            deleteIndex = tiles.findIndex((object)=>{
+                return object == tile;
+            });
+
+            if(deleteIndex != -1){
+                tiles.splice(deleteIndex,1);
+            }
+            tile.remove();
+        }
+    }
+}
+
+function deleteHighlight(indexX,indexY){
+    for(let i = 0; i< highlights.length; i++){
+        highlight = highlights[i];
+        let x = highlight.getAttribute('data-x');
+        let y = highlight.getAttribute('data-y');
+        if(x == indexX && y == indexY){    
+            highlights.splice(i,1);
+            highlight.remove();
+        }
+    }
 }
 
 function clearBoard() {
