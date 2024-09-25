@@ -107,7 +107,7 @@ function checkBoard(indexX,indexY,className){
 
 function hideHighlight() {
     highlights.forEach((highlight) => {
-        highlight.remove();
+        highlight.style.display = 'none';
     })
 }
 
