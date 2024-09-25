@@ -71,15 +71,21 @@ function deletePiece(indexX,indexY){
         piece = pieces[i];
         let x = piece.getAttribute('data-x');
         let y = piece.getAttribute('data-y');
-        if(x == indexX && y == indexY){
-            deleteIndex = pieces.findIndex((object)=>{
-                return object == piece;
-            });
-
-            if(deleteIndex != -1){
-                pieces.splice(deleteIndex,1);
-            }
+        if(x == indexX && y == indexY){    
+            pieces.splice(i,1);
             piece.remove();
+        }
+    }
+}
+
+function deleteHighlight(indexX,indexY){
+    for(let i = 0; i< highlights.length; i++){
+        highlight = highlights[i];
+        let x = highlight.getAttribute('data-x');
+        let y = highlight.getAttribute('data-y');
+        if(x == indexX && y == indexY){    
+            highlights.splice(i,1);
+            highlight.remove();
         }
     }
 }
@@ -108,7 +114,7 @@ function checkBoard(indexX,indexY,className){
 function hideHighlight() {
     highlights.forEach((highlight) => {
         highlight.style.display = 'none';
-    })
+    });
 }
 
 function updateHighlight(clientX, clientY) {
@@ -120,7 +126,8 @@ function updateHighlight(clientX, clientY) {
         highlights.push(target);
     }
     const position = pixelToIndex(clientX, clientY);
-    placeObject(target,position.x,position.y)
+    placeObject(target,position.x,position.y);
+    highlightElement.style.display = 'block';
 }
 
 function pixelToIndex(clientX, clientY) {
@@ -161,7 +168,6 @@ function placeObject(object, indexX, indexY) {
 }
 
 function createTile(color, indexX, indexY) {
-
     // deleteTile(indexX,indexY);
     const tile = document.createElement('div');
     tile.classList.add('tile', color);
@@ -194,6 +200,17 @@ function createPiece(pieceName,indexX,indexY){
 
     placeObject(piece, indexX, indexY);
     return piece;
+}
+
+function createHighlight(indexX,indexY){
+    deleteHighlight(indexX,indexY);
+    const highlight = document.createElement('div');
+    highlight.classList.add('highlight');
+    highlight.style.display = 'block';
+    highlights.push(highlight);
+    boardArea.appendChild(highlight);
+    placeObject(highlight,indexX,indexY);
+    return highlight;
 }
 
 function clearBoard() {

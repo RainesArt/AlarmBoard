@@ -26,7 +26,8 @@ let draggedTile = null;
 let tiles = [];
 let pieces = [];
 let highlights = [];
-let target = null;
+let target = createHighlight(0,0);
+target.style.display = 'none';
 
 
 function addTiles(color, count) {
@@ -124,17 +125,16 @@ clearBoardBtn.addEventListener('click', () => {clearBoard();updateTileCount();up
 boardArea.addEventListener('dragover', (e) => {
     if(draggedTile){
         e.preventDefault();
-        updateHighlight(e.clientX,e.clientY);
+        const position = pixelToIndex(e.clientX, e.clientY);
+        placeObject(target,position.x,position.y);
+        target.style.display = 'block';
     }
 });
 
-boardArea.addEventListener('dragleave', () => {
-    hideHighlight();
-});
 
 boardArea.addEventListener('drop', (e) => {
     e.preventDefault();
-    hideHighlight();
+    // hideHighlight();
 
     if(!draggedTile){return;}
 
